@@ -1,8 +1,27 @@
 const express = require('express')
 const app = express()
 const port = process.env.PORT || 3000;
+const bcrypt = require('bcrypt');
 
 app.use(express.json())
+
+    //new user registeration
+    app.post('/user',async (req, res) => {
+      //insertOne the registeration data to mongo
+      const hash = bcrypt.hashSync(req.body.password, 10);
+
+
+      //console.log(req.body)
+      let result = await client.db("maybank").collection("testing").insertOne(
+        {
+          username: req.body.username,
+          password: hash,     //tukar raw password to hash
+          name: req.body.name,
+          email: req.body.email,
+        }
+      )
+      res.send(result)
+    })
 
 app.get('/', (req, res) => {
    res.send('Hello World!')
@@ -61,6 +80,12 @@ async function run() {
       }
     )
     
+    app.get('/hello',(req, res) =>
+    {
+      res.send('BERR 2423 Database')
+    })
+
+
 
 
   } finally {
